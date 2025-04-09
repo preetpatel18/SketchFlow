@@ -28,7 +28,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
     ```bash
     npm install
     ```
-
+    > ✅ Note: Download if [Node JS](https://nodejs.org/en) isn't already install **globaly**.
 3. **Set up environment variables**
 
     Create a `.env` file:
@@ -37,15 +37,20 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
     ```
 
     > ✅ Note: `.env` is already ignored via `.gitignore`.
+4. **Download Required Libraries**
 
-4. **Start the backend**
+    ```bash
+        npm install react react-dom react-router-dom react-scripts fabric file-saver html-to-react jszip cheerio dompurify cors @google/generative-ai web-vitals
+    ```
+
+5. **Start the backend**
     ```bash
     node server.js
     ```
 
     This runs on: [http://localhost:5050](http://localhost:5050)
 
-5. **Start the frontend**
+6. **Start the frontend**
     ```bash
     npm start
     ```
