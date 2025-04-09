@@ -20,7 +20,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 
 1. **Clone the repo**
     ```bash
-    git clone https://github.com/your-username/sketch-to-react
+    git clone https://github.com/your-username/SketchFlow
     cd sketch-to-react
     ```
 
@@ -78,6 +78,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 ---
 
 ## 📁 Project Structure
+```bash
 ├── src 
 │ ├── components 
 │ │ └── Gemini.js 
@@ -89,7 +90,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 ├── .env 
 ├── .gitignore 
 └── README.md
-
+```
 
 ---
 
@@ -109,10 +110,3 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 ## 💡 Want to contribute?
 
 Feel free to submit PRs to enhance UI, add export formats, or improve AI prompts.
-
----
-
-## 📄 License
-
-[MIT](LICENSE)
-
