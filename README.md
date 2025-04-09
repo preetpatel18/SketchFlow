@@ -21,7 +21,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 1. **Clone the repo**
     ```bash
     git clone https://github.com/your-username/SketchFlow
-    cd sketch-to-react
+    cd SketchFlow
     ```
 
 2. **Install dependencies**
