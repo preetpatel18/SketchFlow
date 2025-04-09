@@ -12,7 +12,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 - Backend API to process canvas → HTML → React
 - AI-powered HTML generation using **Gemini**
 - Zips the generated React project and downloads it
-- Fully styled interface (**no Tailwind required**)
+- Fully styled interface
 
 ---
 
