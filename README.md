@@ -40,7 +40,7 @@ This tool lets you draw with basic shapes, then uses Gemini AI + backend magic t
 4. **Download Required Libraries**
 
     ```bash
-        npm install react react-dom react-router-dom react-scripts fabric file-saver html-to-react jszip cheerio dompurify cors @google/generative-ai web-vitals
+    npm install react react-dom react-router-dom react-scripts fabric file-saver html-to-react jszip cheerio dompurify cors @google/generative-ai web-vitals
     ```
 
 5. **Start the backend**
