@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { analyzeImage } from "../components/Gemini.js";
 import * as fabric from 'fabric';
+import img from './SketchFlow.png';
 
 function Home() {
     const canvasRef = useRef(null);
@@ -10,7 +11,7 @@ function Home() {
     const [settings, setSettings] = useState({
         currentTool: 'select',
         strokeColor: '#000000',
-        fillColor: '#ffffff',
+        fillColor: '#000000',
         lineWidth: 2,
         fontFamily: 'Arial',
         fontSize: 20,
@@ -166,97 +167,101 @@ function Home() {
     };
 
     return (
-        <div>       
-            <h1>Drawing App</h1>
+        <div className = "container">       
+            <h1>
+                <img src={img} alt="SketchFlow" />
+            </h1>
             {loading && <p style={{ textAlign: 'center', color: '#3b82f6' }}>Generating React project...</p>}
-            <div className="toolbar">
-                <button className={settings.currentTool === 'select' ? 'active' : ''} onClick={() => handleToolChange('select')}>Select</button>
-                <button className={settings.currentTool === 'square' ? 'active' : ''} onClick={() => handleToolChange('square')}>Square</button>
-                <button className={settings.currentTool === 'circle' ? 'active' : ''} onClick={() => handleToolChange('circle')}>Circle</button>
-                <button className={settings.currentTool === 'pencil' ? 'active' : ''} onClick={() => handleToolChange('pencil')}>Pencil</button>
-                <button className={settings.currentTool === 'eraser' ? 'active' : ''} onClick={() => handleToolChange('eraser')}>Eraser</button>
-                <button className={settings.currentTool === 'text' ? 'active' : ''} onClick={() => handleToolChange('text')}>Text</button>
-                <button onClick={() => {
-                    const canvas = fabricCanvasRef.current;
-                    const activeObject = canvas.getActiveObject();
-                    if (activeObject) {
-                        canvas.remove(activeObject);
-                        canvas.discardActiveObject();
-                        canvas.renderAll();
-                    }
-                }}>Delete</button>
-            </div>
-
-            <div className="controls-group">
-                {settings.currentTool === 'pencil' && (
-                    <label>Pencil Color:
-                        <input type="color" value={settings.strokeColor} onChange={(e) => {
+            <div className="toolBox">
+                <div className="toolbar">
+                    <button className={settings.currentTool === 'select' ? 'tool active' : 'tool'} onClick={() => handleToolChange('select')}>Select</button>
+                    <button className={settings.currentTool === 'square' ? 'tool active t' : 'tool'} onClick={() => handleToolChange('square')}>Square</button>
+                    <button className={settings.currentTool === 'circle' ? 'tool active t' : 'tool'} onClick={() => handleToolChange('circle')}>Circle</button>
+                    <button className={settings.currentTool === 'pencil' ? 'tool active t' : 'tool'} onClick={() => handleToolChange('pencil')}>Pencil</button>
+                    <button className={settings.currentTool === 'eraser' ? 'tool active t' : 'tool'} onClick={() => handleToolChange('eraser')}>Eraser</button>
+                    <button className={settings.currentTool === 'text' ? 'tool active t' : 'tool'} onClick={() => handleToolChange('text')}>Text</button>
+                    <button className="tool delete-btn" onClick={() => {
+                        const canvas = fabricCanvasRef.current;
+                        const activeObject = canvas.getActiveObject();
+                        if (activeObject) {
+                            canvas.remove(activeObject);
+                            canvas.discardActiveObject();
+                            canvas.renderAll();
+                        }
+                    }}>🗑️</button>
+                </div>
+                <div className="controls-group">
+                    {settings.currentTool === 'pencil' && (
+                        <label className="color-label">Pencil Color:
+                            <input class="color-box" type="color" value={settings.strokeColor} onChange={(e) => {
+                                const newColor = e.target.value;
+                                setSettings({...settings, strokeColor: newColor});
+                                if (fabricCanvasRef.current?.freeDrawingBrush) {
+                                    fabricCanvasRef.current.freeDrawingBrush.color = newColor;
+                                }
+                            }} />
+                        </label>
+                    )}
+                    {settings.currentTool !== 'pencil' && (
+                        <label className="color-label">Stroke Color:
+                            <input class="color-box" type="color" value={settings.strokeColor} onChange={(e) => {
+                                const newColor = e.target.value;
+                                setSettings({...settings, strokeColor: newColor});
+                                const activeObj = fabricCanvasRef.current?.getActiveObject();
+                                if (activeObj) {
+                                    activeObj.set('stroke', newColor);
+                                    fabricCanvasRef.current?.requestRenderAll();
+                                }
+                            }} />
+                        </label>
+                    )}
+                    <label className="color-label">Fill Color:
+                        <input class="color-box" type="color" value={settings.fillColor} onChange={(e) => {
                             const newColor = e.target.value;
-                            setSettings({...settings, strokeColor: newColor});
-                            if (fabricCanvasRef.current?.freeDrawingBrush) {
-                                fabricCanvasRef.current.freeDrawingBrush.color = newColor;
-                            }
-                        }} />
-                    </label>
-                )}
-                {settings.currentTool !== 'pencil' && (
-                    <label>Stroke Color:
-                        <input type="color" value={settings.strokeColor} onChange={(e) => {
-                            const newColor = e.target.value;
-                            setSettings({...settings, strokeColor: newColor});
+                            setSettings({...settings, fillColor: newColor});
                             const activeObj = fabricCanvasRef.current?.getActiveObject();
                             if (activeObj) {
-                                activeObj.set('stroke', newColor);
+                                activeObj.set('fill', newColor);
                                 fabricCanvasRef.current?.requestRenderAll();
                             }
                         }} />
                     </label>
-                )}
-                <label>Fill Color:
-                    <input type="color" value={settings.fillColor} onChange={(e) => {
-                        const newColor = e.target.value;
-                        setSettings({...settings, fillColor: newColor});
-                        const activeObj = fabricCanvasRef.current?.getActiveObject();
-                        if (activeObj) {
-                            activeObj.set('fill', newColor);
-                            fabricCanvasRef.current?.requestRenderAll();
-                        }
-                    }} />
-                </label>
-                <label>Line Width:
-                    <input type="number" value={settings.lineWidth} min="1" max="20" onChange={(e) => {
-                        const newWidth = parseInt(e.target.value) || 1;
-                        setSettings({...settings, lineWidth: newWidth});
-                        if (settings.currentTool === 'pencil' && fabricCanvasRef.current?.freeDrawingBrush) {
-                            fabricCanvasRef.current.freeDrawingBrush.width = newWidth;
-                        } else {
-                            const activeObj = fabricCanvasRef.current?.getActiveObject();
-                            if (activeObj) {
-                                activeObj.set('strokeWidth', newWidth);
-                                fabricCanvasRef.current?.requestRenderAll();
-                            }
-                        }
-                    }} />
-                </label>
-                {settings.currentTool === 'eraser' && (
-                    <label>Eraser Width:
-                        <input type="number" value={settings.eraserWidth} min="1" max="50" onChange={(e) => {
-                            const newWidth = parseInt(e.target.value) || 10;
-                            setSettings({...settings, eraserWidth: newWidth});
-                            if (fabricCanvasRef.current?.freeDrawingBrush) {
-                                fabricCanvasRef.current.freeDrawingBrush.width = newWidth;
-                            }
-                        }} />
-                    </label>
-                )}
+                    {settings.currentTool === 'eraser' && (
+                        <label className="color-label">Eraser Width:
+                            <input type="number" value={settings.eraserWidth} min="1" max="50" onChange={(e) => {
+                                const newWidth = parseInt(e.target.value) || 10;
+                                setSettings({...settings, eraserWidth: newWidth});
+                                if (fabricCanvasRef.current?.freeDrawingBrush) {
+                                    fabricCanvasRef.current.freeDrawingBrush.width = newWidth;
+                                }
+                            }} />
+                        </label>
+                    )}
+                    {settings.currentTool !== 'eraser' && (
+                        <label className="color-label">Line Width:
+                            <input type="number" value={settings.lineWidth} min="1" max="20" onChange={(e) => {
+                                const newWidth = parseInt(e.target.value) || 1;
+                                setSettings({...settings, lineWidth: newWidth});
+                                if (settings.currentTool === 'pencil' && fabricCanvasRef.current?.freeDrawingBrush) {
+                                    fabricCanvasRef.current.freeDrawingBrush.width = newWidth;
+                                } else {
+                                    const activeObj = fabricCanvasRef.current?.getActiveObject();
+                                    if (activeObj) {
+                                        activeObj.set('strokeWidth', newWidth);
+                                        fabricCanvasRef.current?.requestRenderAll();
+                                    }
+                                }
+                            }} />
+                        </label>
+                    )}
+                </div>
             </div>
+            <canvas ref={canvasRef} id="drawing-canvas" width="800" height="500" />
 
             <div className="action-buttons">
                 <button onClick={handleClearCanvas}>Clear Canvas</button>
                 <button onClick={handleCanvasSubmit} disabled={loading}>Convert & Download ZIP</button>
             </div>
-
-            <canvas ref={canvasRef} id="drawing-canvas" width="800" height="500" />
         </div>
     );
 }
